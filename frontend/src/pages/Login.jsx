@@ -88,7 +88,7 @@ const Login = () => {
 
         <p className="mt-10 text-center text-sm/6 text-gray-500">
           Not a member?
-          <Link to="/register">Register</Link>
+          <Link to="/register">Register Now</Link>
         </p>
       </div>
     </div>
