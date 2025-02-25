@@ -26,7 +26,7 @@ function Clients() {
     <div>
       Clients
       <div>
-        <Link to="/create">Add Client</Link>
+        <Link to="/create">Add a Client</Link>
       </div>
       <div>
         <table>

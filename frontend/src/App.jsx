@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Clients />}></Route>
         <Route path="/register" element={<Register />}></Route>
         <Route path="/login" element={<Login />}></Route>
-        <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="/create" element={<CreateClient />}></Route>
         <Route path="/update/:id" element={<UpdateClient />}></Route>
       </Routes>

@@ -61,12 +61,12 @@ router.post("/forgot-password", async (req, res) => {
 
     var mailOptions = {
       from: "dindinmailla4987@gmail.com",
-      to: "email",
+      to: "user.email",
       subject: "Forgot Password Reset Link",
       text: `http://localhost:5173/resetPassword/${token}`,
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
+    transporter.sendMail(mailOptions, function (error) {
       if (error) {
         return res.json({ message: "Error sending message email!" });
       } else {
