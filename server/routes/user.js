@@ -4,6 +4,8 @@ const router = express.Router();
 import { UserModel } from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
@@ -51,31 +53,61 @@ router.post("/forgot-password", async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
       expiresIn: "5m",
     });
+
+    console.log("GMAIL_USER:", process.env.GMAIL_USER);
+    console.log(
+      "GMAIL_PASS:",
+      process.env.GMAIL_PASS ? "Loaded" : "Not Loaded"
+    );
+
     var transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // Use `true` for 465, `false` for 587
       auth: {
-        user: "dindinmailla4987@gmail.com",
-        pass: "sznw yyuq weea bjkf",
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
       },
     });
 
     var mailOptions = {
-      from: "dindinmailla4987@gmail.com",
-      to: "user.email",
+      from: process.env.GMAIL_USER,
+      to: email,
       subject: "Forgot Password Reset Link",
       text: `http://localhost:5173/resetPassword/${token}`,
     };
 
-    transporter.sendMail(mailOptions, function (error) {
-      if (error) {
-        return res.json({ message: "Error sending message email!" });
-      } else {
-        return res.json({ status: true, message: "Email sent!" });
-      }
-    });
-  } catch (err) {
-    console.log(err);
+    await transporter.sendMail(mailOptions);
+    return res.json({ status: true, message: "Email sent!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res
+      .status(500)
+      .json({ message: "Error sending email", error: error.message });
   }
 });
+
+const verifyUser = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.json({ status: false, message: "No token" });
+    }
+    const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+    next();
+  } catch (err) {
+    return res.json(err);
+  }
+};
+
+router.get("/verify",verifyUser, (req, res) => {
+  return res.json({ status: true, message: "Authorized!" });
+});
+
+router.get('/logout', (req, res) => {
+  res.clearCookie('token')
+  return res.json({status: true})
+})
+
 
 export { router as UserRouter };

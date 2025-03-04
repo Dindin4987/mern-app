@@ -19,7 +19,6 @@ const Login = () => {
         }
       })
       .catch((err) => console.log(err));
-    alert("Wrong credentials!");
   };
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
